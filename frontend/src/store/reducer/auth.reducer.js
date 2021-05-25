@@ -19,7 +19,7 @@ const authReducer = (state = initialState, action) => {
     case AuthActions.LOGIN_REQUEST:
       return {
         error: "",
-        loaded: false,
+        loaded: true,
         isAuthenticated:false,
         user:null,
       };
@@ -29,7 +29,7 @@ const authReducer = (state = initialState, action) => {
       return {
         user: action.user,
         error: "",
-        loaded: true,
+        loaded: false,
         isAuthenticated:true
       };
 
@@ -49,8 +49,10 @@ const authReducer = (state = initialState, action) => {
 
     case AuthActions.LOGOUT:
       return {
-        ...state,
+        
+        user:null,
         isAuthenticated:false,
+        error:action.payload,
       };
 
     case AuthActions.LOGOUT_FAILURE:
@@ -90,16 +92,8 @@ function failure(error) {
 }
 
 export const _logout = () => {
-  logout().then(
-    (data) => {
-      return { type: AuthActions.LOGOUT, data: data };
-    },
-    (error) => {
-      return {
-        type: AuthActions.LOGOUT_FAILURE,
-        error: error.message.toString(),
-      };
-    }
-  );
+  logout()
+      console.log('logout dipatch');
+      return { type: AuthActions.LOGOUT};
 };
 export default authReducer;

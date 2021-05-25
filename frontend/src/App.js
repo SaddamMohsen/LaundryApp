@@ -69,15 +69,17 @@ const App = (props) => {
     },[props.isAuthenticated])
     
   return (
+    <div id="root">
     <MuiThemeProvider theme={theme}>
       <Router history={history}>
         <Switch>
-        
+          
           <PrivateRoute exact path ="/" authenticated={authenticated} component={Dashboard}/>
           <Route path="/login" component={LOGIN}/>
         </Switch>
       </Router>
       </MuiThemeProvider>
+      </div>
   );
 };
 const mapStateToProps=(state)=>{

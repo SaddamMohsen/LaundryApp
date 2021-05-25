@@ -3,14 +3,14 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
+
+//import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
+//import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
 
 import React, { useState,useEffect } from "react";
 
@@ -18,10 +18,10 @@ import { compose } from 'redux';
 
 import { connect } from "react-redux";
 
-import { Redirect ,withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
-import history from "../utils/history";
-import { isEmail, validateLoginData } from "../utils/validators";
+//import history from "../utils/history";
+import {  validateLoginData } from "../utils/validators";
 import { login } from "../store/reducer/auth.reducer";
 
 const styles = (theme) => ({
@@ -55,28 +55,30 @@ const styles = (theme) => ({
 const LOGIN = (props) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [error, setErrors] = useState({});
+  const [error, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
   const classes = styles;
   
   
   
     const redirect=()=>{
-     
-       
        props.history.push('/');
-      
         }
     
  useEffect(()=>{
-   console.log(props.isAuthenticated)
     if (props.isAuthenticated === true) {
          redirect()
-    }},[props.isAuthenticated])
+    } 
+   
+  },[props.isAuthenticated])
+  useEffect(()=>{
+    setLoading(false)
+  },[props.error])
   
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setErrors([]);
     const data = {
       email: email,
       password: password,
@@ -84,17 +86,15 @@ const LOGIN = (props) => {
     
     const { valid, errors } = validateLoginData(data);
     if (!valid) 
-    {setErrors(errors);
-      setLoading(true);
-    }
-    try {
-     await props.login(email, password)
-     
-    } catch (error) {
-      console.log("in login catch  error");
+    {  
+      setErrors(errors);
       setLoading(false);
-      setErrors({ error: error.message });
+      return 
     }
+    
+     await props.login(email, password)
+   
+    
   };
   
 
@@ -153,11 +153,17 @@ const LOGIN = (props) => {
             )}
           </Button>
 
-          {props.error && (
+          {error.notEmail && (
+            <Typography variant="body2" className={classes.customError}>
+              {error.notEmail}
+            </Typography>
+          )}
+            {props.error && (
             <Typography variant="body2" className={classes.customError}>
               {props.error}
             </Typography>
           )}
+         
         </form>
       </div>
     </Container>

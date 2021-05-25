@@ -18,17 +18,25 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import clsx from "clsx";
 
+//import { useSelector, useDispatch } from 'react-redux';
 
+import { compose } from 'redux';
+
+import { connect } from "react-redux";
+
+import { withRouter } from "react-router-dom";
+
+import { _logout } from "../store/reducer/auth.reducer";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="/">
        LaundryApp Dashboard
       </Link>{" "}
       {new Date().getFullYear()}
@@ -118,7 +126,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  //const {user} = useSelector(state => state.auth.user);
+  //const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState(true);
   const handleDrawerOpen = () => {
@@ -126,9 +136,26 @@ const Dashboard = () => {
   };
   const handleDrawerClose = () => {
     setOpen(false);
+    //console.log({user})
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const redirect=()=>{
+    props.history.push('/login');
+     }
+ 
+useEffect(()=>{
+console.log(props.isAuthenticated)
+ if (props.isAuthenticated === false) {
+      redirect()
+ }},[props.isAuthenticated])
 
+  const logout=()=>{
+    console.log("logout clicked")
+    props._logout();
+    console.log(props.user);
+    
+    //props.history.push('/login');
+  }
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -156,14 +183,14 @@ const Dashboard = () => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+           <p> Dashboard </p>
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={()=>logout()} >
             
               <ExitToAppIcon />
             
@@ -212,4 +239,17 @@ const Dashboard = () => {
     </div>
   );
 };
-export default Dashboard;
+const mapStateToProps = (state) => {
+  const { error, loaded, user,isAuthenticated } = state.auth;
+  return {
+    error,
+    loaded,
+    user,
+    isAuthenticated,
+  };
+};
+const mapStateToDispatch = {
+  _logout,
+};
+export default compose(withRouter,
+  connect(mapStateToProps, mapStateToDispatch))(Dashboard);

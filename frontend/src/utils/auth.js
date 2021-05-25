@@ -10,5 +10,6 @@ export function signin(email, password) {
 }
 
 export function logout() {
+ // console.log('logout auth');
   return auth().signOut()
 }
