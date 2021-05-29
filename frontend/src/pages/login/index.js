@@ -3,14 +3,11 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-
-//import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
-//import createBreakpoints from "@material-ui/core/styles/createBreakpoints";
 
 import React, { useState,useEffect } from "react";
 
@@ -20,9 +17,8 @@ import { connect } from "react-redux";
 
 import { withRouter } from "react-router-dom";
 
-//import history from "../utils/history";
-import {  validateLoginData } from "../utils/validators";
-import { login } from "../store/reducer/auth.reducer";
+import {  validateLoginData } from "../../utils/validators";
+import { login } from "../../store/reducer/auth.reducer";
 
 const styles = (theme) => ({
   paper: {
@@ -61,16 +57,14 @@ const LOGIN = (props) => {
   
   
   
-    const redirect=()=>{
-       props.history.push('/');
-        }
+    
     
  useEffect(()=>{
     if (props.isAuthenticated === true) {
-         redirect()
+      props.history.push('/');
     } 
    
-  },[props.isAuthenticated])
+  },[props.isAuthenticated,props.history])
   useEffect(()=>{
     setLoading(false)
   },[props.error])
@@ -100,7 +94,7 @@ const LOGIN = (props) => {
 
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container  maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

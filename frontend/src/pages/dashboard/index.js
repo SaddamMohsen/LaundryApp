@@ -13,31 +13,35 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
+import Tooltip from "@material-ui/core/Tooltip";
 import MenuIcon from "@material-ui/icons/Menu";
+import Icon from "@material-ui/core/Icon";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
 
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import clsx from "clsx";
 
-//import { useSelector, useDispatch } from 'react-redux';
-
-import { compose } from 'redux';
+import { compose } from "redux";
 
 import { connect } from "react-redux";
 
-import { withRouter } from "react-router-dom";
+import { withRouter, Link as RoutLink } from "react-router-dom";
 
-import { _logout } from "../store/reducer/auth.reducer";
+import * as ROUTES from "../../constants/routes";
+import { _logout } from "../../store/reducer/auth.reducer";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="/">
-       LaundryApp Dashboard
+        LaundryApp Dashboard
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -45,7 +49,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 240;
+const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -138,24 +142,64 @@ const Dashboard = (props) => {
     setOpen(false);
     //console.log({user})
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  const redirect=()=>{
-    props.history.push('/login');
-     }
- 
-useEffect(()=>{
-console.log(props.isAuthenticated)
- if (props.isAuthenticated === false) {
-      redirect()
- }},[props.isAuthenticated])
+  //const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  
 
-  const logout=()=>{
-    console.log("logout clicked")
+  useEffect(() => {
+    if (props.isAuthenticated === false) {
+      props.history.push("/login");
+    }
+  }, [props.isAuthenticated,props.history]);
+
+  const logout = () => {
     props._logout();
-    console.log(props.user);
-    
-    //props.history.push('/login');
-  }
+  };
+
+  const menuItems = [
+    //{ label: 'Provider', path: "/home", icon: "supervisor_account" },
+    { label: "Services", path: ROUTES.SERVICES, icon: "store" },
+    { label: "Services Categories", path: "/organizations", icon: "category" },
+    { label: "Policy", path: "/home", icon: "policy" },
+    { label: "User", path: "/home", icon: "person" },
+    { label: "Roles", path: "/home", icon: "assignment_ind" },
+    { label: "Orders", path: "/home", icon: "add_shopping_cart" },
+    // { label: "Home", path: "/home", icon: "home" },
+  ];
+
+  const MenuItem = () => (
+    <List>
+      {menuItems.map(({ label, icon, path }) => (
+        <ListItem button key={label} button component={RoutLink} to={path}>
+          {!open && (
+            <ListItemIcon aria_label={label}>
+              <Tooltip
+                arrow
+                title={
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      fontFamily: "Roboto",
+                      letterSpacing: "0.01208em",
+                    }}
+                  >
+                    {label}
+                  </p>
+                }
+                placement="right"
+              >
+                <Icon>{icon}</Icon>
+              </Tooltip>
+            </ListItemIcon>
+          )}
+          <ListItemIcon>
+            <Icon>{icon}</Icon>
+          </ListItemIcon>
+          <ListItemText primary={label} />
+        </ListItem>
+      ))}
+    </List>
+  );
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -183,17 +227,15 @@ console.log(props.isAuthenticated)
             noWrap
             className={classes.title}
           >
-           <p> Dashboard </p>
+            Dashboard
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={0} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit" onClick={()=>logout()} >
-            
-              <ExitToAppIcon />
-            
+          <IconButton color="inherit" onClick={() => logout()}>
+            <ExitToAppIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -212,23 +254,52 @@ console.log(props.isAuthenticated)
         <Divider />
         <List></List>
         <Divider />
-        <List>will be here</List>
+        <List>{MenuItem()}</List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Chart */}
+            {/* Chart 
             <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
-            {/* Recent Deposits */}
+              <Paper className={fixedHeightPaper}>
+              <Typography
+               component="h3"
+               variant="h6"
+               color="inherit"
+               noWrap
+               className={classes.title}>
+               <p>Charts</p>
+           </Typography>
+              </Paper>
+            </Grid>*/}
+            {/* Recent Deposits 
             <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
+              <Paper className={fixedHeightPaper}>
+                 <Typography
+              component="h3"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}>
+              <p>Recent Deposit</p>
+               </Typography>
+              
+              </Paper>
+            </Grid>*/}
             {/* Recent Orders */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}></Paper>
+              <Paper className={classes.paper}>
+                <Typography
+                  component="h3"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  className={classes.content}
+                >
+                  <p>Recent Orders</p>
+                </Typography>
+              </Paper>
             </Grid>
           </Grid>
           <Box pt={4}>
@@ -240,7 +311,7 @@ console.log(props.isAuthenticated)
   );
 };
 const mapStateToProps = (state) => {
-  const { error, loaded, user,isAuthenticated } = state.auth;
+  const { error, loaded, user, isAuthenticated } = state.auth;
   return {
     error,
     loaded,
@@ -251,5 +322,7 @@ const mapStateToProps = (state) => {
 const mapStateToDispatch = {
   _logout,
 };
-export default compose(withRouter,
-  connect(mapStateToProps, mapStateToDispatch))(Dashboard);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapStateToDispatch)
+)(Dashboard);

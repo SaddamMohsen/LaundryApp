@@ -1,21 +1,20 @@
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 
 import React,{useState,useEffect} from "react";
 
 import {
   Route,
-  BrowserRouter as Router,
+   Router,
   Switch,
-  Redirect,
 } from "react-router-dom";
 
 import { connect } from "react-redux";
 
 import LOGIN from "./pages/login";
-import Dashboard from "./pages/newPage";
 import history from "./utils/history";
-
+import Routes  from "./components/protectedRoute/config";
+import ProtectedRoute from "./components/protectedRoute/protectedRoute";
 const theme = createMuiTheme({
 	palette: {
 		primary: {
@@ -27,22 +26,7 @@ const theme = createMuiTheme({
 	}
 });
 
-const PrivateRoute = ({ component: Component, authenticated, ...rest }) => {
-   return (
-    <Route
-      {...rest}
-      render={(props) =>
-        authenticated === true ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{ pathname: "/login", state: { from:"/" } }}
-          />
-        )
-      }
-    />
-  );
-};
+
 /*
 const PublicRoute = ({ component: Component, authenticated, ...rest }) => {
   return (
@@ -61,7 +45,7 @@ const PublicRoute = ({ component: Component, authenticated, ...rest }) => {
 };*/
 const App = (props) => {
 	const [authenticated,setAuth]=useState(props.isAuthenticated)
-	//const [loading,setLoading] = useState(false)
+	
 
 	  useEffect(()=>{
       if(props.isAuthenticated===true)
@@ -69,17 +53,26 @@ const App = (props) => {
     },[props.isAuthenticated])
     
   return (
-    <div id="root">
+   
     <MuiThemeProvider theme={theme}>
       <Router history={history}>
         <Switch>
+          <Route exact path='/login' component={LOGIN}/>
+          {Routes.map(route => (
+            <ProtectedRoute
+              key={route.path}
+              exact={route.exact}
+              path={route.path}
+              authenticated={authenticated}
+              component={route.component()}
+            />))
+          }
           
-          <PrivateRoute exact path ="/" authenticated={authenticated} component={Dashboard}/>
-          <Route path="/login" component={LOGIN}/>
+         
         </Switch>
       </Router>
       </MuiThemeProvider>
-      </div>
+      
   );
 };
 const mapStateToProps=(state)=>{

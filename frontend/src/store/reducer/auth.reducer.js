@@ -26,6 +26,7 @@ const authReducer = (state = initialState, action) => {
 
     case AuthActions.LOGIN_SUCCESS:
       //console.log("in login success"+action)
+      localStorage.setItem("user",JSON.stringify(action.user))
       return {
         user: action.user,
         error: "",
@@ -42,6 +43,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case AuthActions.LOGOUT.REQUEST:
+      localStorage.clear()
       return {
         ...state,
         
@@ -94,6 +96,7 @@ function failure(error) {
 export const _logout = () => {
   logout()
       console.log('logout dipatch');
+      localStorage.clear();
       return { type: AuthActions.LOGOUT};
 };
 export default authReducer;
