@@ -43,6 +43,15 @@ const PublicRoute = ({ component: Component, authenticated, ...rest }) => {
     />
   );
 };*/
+const NotFound=()=>{
+  return(
+    <div>
+     <h1>Not Found  404</h1>
+    </div>
+  )
+} 
+
+
 const App = (props) => {
 	const [authenticated,setAuth]=useState(props.isAuthenticated)
 	
@@ -67,6 +76,7 @@ const App = (props) => {
               component={route.component()}
             />))
           }
+          <Route path="*" component={NotFound} />
           
          
         </Switch>
